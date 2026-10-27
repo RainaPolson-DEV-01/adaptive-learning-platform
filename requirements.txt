@@ -1,0 +1,4 @@
+streamlit>=1.40,<2.0
+python-dotenv>=1.0,<2.0
+azure-cosmos>=4.9,<5.0
+azure-search-documents>=11.6,<12.0
