@@ -1,34 +1,66 @@
-"""Generate knowledge checks tailored to a learner and topic."""
+import os
+import json
+from dotenv import load_dotenv
+from openai import AzureOpenAI
 
-from collections.abc import Callable
+load_dotenv()
 
+client = AzureOpenAI(
+    api_key=os.getenv("AZURE_OPENAI_KEY"),
+    api_version="2024-02-01",
+    azure_endpoint=os.getenv("AZURE_OPENAI_ENDPOINT")
+)
 
-class AssessmentAgent:
-    """Generate an assessment with an answer key and explanations."""
+def generate_assessment(profile):
 
-    def __init__(self, generate: Callable[[str], str]) -> None:
-        self._generate = generate
+    skills = profile.get(
+        "Skills",
+        profile.get("skills", [])
+    )
 
-    def create_assessment(
-        self,
-        topic: str,
-        learner_profile: str,
-        question_count: int = 5,
-    ) -> str:
-        """Create an assessment for the given topic and learner."""
-        if not topic.strip():
-            raise ValueError("topic must not be empty")
-        if not learner_profile.strip():
-            raise ValueError("learner_profile must not be empty")
-        if question_count < 1:
-            raise ValueError("question_count must be at least 1")
+    prompt = f"""
+    Create an assessment for this learner.
 
-        prompt = (
-            f"Create exactly {question_count} assessment questions about "
-            f"{topic!r}, calibrated to this learner's profile. Include a "
-            "mix of recall and application where appropriate. Put the "
-            "answer key and brief explanations after all questions so the "
-            "learner can attempt them first.\n\n"
-            f"Learner profile:\n{learner_profile}"
-        )
-        return self._generate(prompt)
+    Skills:
+    {skills}
+
+    Requirements:
+    - 10 Multiple Choice Questions
+    - 5 Beginner
+    - 5 Intermediate
+    - 4 options per question
+    - Include correct answer
+    - Include related skill
+
+    Return JSON only.
+
+    {{
+      "questions":[
+        {{
+          "skill":"",
+          "difficulty":"",
+          "question":"",
+          "options":[],
+          "answer":""
+        }}
+      ]
+    }}
+    """
+
+    response = client.chat.completions.create(
+        model=os.getenv("GPT_DEPLOYMENT"),
+        messages=[
+            {
+                "role": "user",
+                "content": prompt
+            }
+        ]
+    )
+
+    result = response.choices[0].message.content
+
+    result = result.replace("```json", "")
+    result = result.replace("```", "")
+    result = result.strip()
+
+    return json.loads(result)
