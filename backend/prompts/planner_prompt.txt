@@ -1,0 +1,13 @@
+Create a personalized learning roadmap.
+
+Use learner profile,
+assessment results,
+and available learning modules.
+
+Return JSON only.
+
+{
+  "goal":"",
+  "estimatedDuration":"",
+  "modules":[]
+}

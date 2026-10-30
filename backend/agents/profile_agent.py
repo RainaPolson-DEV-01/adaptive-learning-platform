@@ -1,39 +1,26 @@
-import os
 import json
-from dotenv import load_dotenv
-from openai import AzureOpenAI
 
-load_dotenv()
-
-client = AzureOpenAI(
-    api_key=os.getenv("AZURE_OPENAI_KEY"),
-    api_version="2024-02-01",
-    azure_endpoint=os.getenv("AZURE_OPENAI_ENDPOINT")
+from backend.services.openai_service import (
+    get_client,
+    get_model_name
 )
+
+from backend.services.prompt_service import (
+    load_prompt
+)
+
+client = get_client()
+model = get_model_name()
 
 
 def generate_profile(resume_text):
 
+    base_prompt = load_prompt(
+        "profile_prompt.txt"
+    )
+
     prompt = f"""
-Analyze this resume.
-
-Extract:
-
-1. name
-2. skills
-3. careerGoals
-4. experienceSummary
-
-Return ONLY valid JSON.
-
-Use EXACTLY this schema:
-
-{{
-    "name":"",
-    "skills":[],
-    "careerGoals":"",
-    "experienceSummary":""
-}}
+{base_prompt}
 
 Resume:
 
@@ -41,7 +28,7 @@ Resume:
 """
 
     response = client.chat.completions.create(
-        model=os.getenv("GPT_DEPLOYMENT"),
+        model=model,
         messages=[
             {
                 "role": "user",
@@ -52,7 +39,6 @@ Resume:
 
     result = response.choices[0].message.content
 
-    # Remove markdown wrappers
     result = result.replace("```json", "")
     result = result.replace("```", "")
     result = result.strip()

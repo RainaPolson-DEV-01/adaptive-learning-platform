@@ -1,28 +1,58 @@
-"""Create a personalized learning plan."""
+import json
 
-from collections.abc import Callable
+from backend.services.openai_service import (
+    get_client,
+    get_model_name
+)
+
+from backend.services.prompt_service import (
+    load_prompt
+)
+
+client = get_client()
+model = get_model_name()
 
 
-class PlannerAgent:
-    """Build a sequenced study plan from a profile and assessment."""
+def generate_learning_path(
+    profile,
+    assessment,
+    catalog
+):
 
-    def __init__(self, generate: Callable[[str], str]) -> None:
-        self._generate = generate
+    base_prompt = load_prompt(
+        "planner_prompt.txt"
+    )
 
-    def create_plan(self, learner_profile: str, assessment_results: str) -> str:
-        """Create a practical study plan based on assessment results."""
-        if not learner_profile.strip():
-            raise ValueError("learner_profile must not be empty")
-        if not assessment_results.strip():
-            raise ValueError("assessment_results must not be empty")
+    prompt = f"""
+{base_prompt}
 
-        prompt = (
-            "Create a personalized learning plan using the learner profile "
-            "and assessment results. Sequence topics from prerequisites to "
-            "more advanced material. For each step, include a learning "
-            "objective, a suggested activity, and a way to check progress. "
-            "Do not assume a time budget that was not provided.\n\n"
-            f"Learner profile:\n{learner_profile}\n\n"
-            f"Assessment results:\n{assessment_results}"
-        )
-        return self._generate(prompt)
+Learner Profile:
+
+{json.dumps(profile, indent=2)}
+
+Assessment:
+
+{json.dumps(assessment, indent=2)}
+
+Available Learning Catalog:
+
+{json.dumps(catalog, indent=2)}
+"""
+
+    response = client.chat.completions.create(
+        model=model,
+        messages=[
+            {
+                "role": "user",
+                "content": prompt
+            }
+        ]
+    )
+
+    result = response.choices[0].message.content
+
+    result = result.replace("```json", "")
+    result = result.replace("```", "")
+    result = result.strip()
+
+    return json.loads(result)

@@ -20,6 +20,9 @@ profile_container = database.get_container_client(
 assessment_container = database.get_container_client(
     "Assessments"
 )
+learning_path_container = database.get_container_client(
+    "LearningPaths"
+)
 
 
 def save_profile(profile):
@@ -60,3 +63,31 @@ def save_assessment(assessment):
     )
 
     return True
+
+def save_learning_path(path):
+
+    learning_path_container.upsert_item(path)
+
+    return True
+def get_assessment(user_id):
+
+    query = """
+    SELECT *
+    FROM c
+    WHERE c.userId = @userId
+    """
+
+    items = list(
+        assessment_container.query_items(
+            query=query,
+            parameters=[
+                {
+                    "name": "@userId",
+                    "value": user_id
+                }
+            ],
+            enable_cross_partition_query=True
+        )
+    )
+
+    return items[0] if items else None

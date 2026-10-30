@@ -1,54 +1,39 @@
-import os
 import json
-from dotenv import load_dotenv
-from openai import AzureOpenAI
 
-load_dotenv()
-
-client = AzureOpenAI(
-    api_key=os.getenv("AZURE_OPENAI_KEY"),
-    api_version="2024-02-01",
-    azure_endpoint=os.getenv("AZURE_OPENAI_ENDPOINT")
+from backend.services.openai_service import (
+    get_client,
+    get_model_name
 )
+
+from backend.services.prompt_service import (
+    load_prompt
+)
+
+client = get_client()
+model = get_model_name()
+
 
 def generate_assessment(profile):
 
     skills = profile.get(
-        "Skills",
-        profile.get("skills", [])
+        "skills",
+        profile.get("Skills", [])
+    )
+
+    base_prompt = load_prompt(
+        "assessment_prompt.txt"
     )
 
     prompt = f"""
-    Create an assessment for this learner.
+{base_prompt}
 
-    Skills:
-    {skills}
+Learner Skills:
 
-    Requirements:
-    - 10 Multiple Choice Questions
-    - 5 Beginner
-    - 5 Intermediate
-    - 4 options per question
-    - Include correct answer
-    - Include related skill
-
-    Return JSON only.
-
-    {{
-      "questions":[
-        {{
-          "skill":"",
-          "difficulty":"",
-          "question":"",
-          "options":[],
-          "answer":""
-        }}
-      ]
-    }}
-    """
+{skills}
+"""
 
     response = client.chat.completions.create(
-        model=os.getenv("GPT_DEPLOYMENT"),
+        model=model,
         messages=[
             {
                 "role": "user",

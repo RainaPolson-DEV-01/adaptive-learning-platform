@@ -1,0 +1,19 @@
+Analyze this resume.
+
+Extract:
+
+1. name
+2. skills
+3. careerGoals
+4. experienceSummary
+
+Return ONLY valid JSON.
+
+Use EXACTLY this schema:
+
+{
+  "name":"",
+  "skills":[],
+  "careerGoals":"",
+  "experienceSummary":""
+}

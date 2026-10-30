@@ -1,0 +1,95 @@
+[
+  {
+    "moduleId": "M001",
+    "title": "Microsoft Fabric Fundamentals",
+    "difficulty": "Beginner",
+    "durationHours": 4,
+    "skills": ["Microsoft Fabric"],
+    "prerequisites": [],
+    "learningObjectives": [
+      "Understand Microsoft Fabric architecture",
+      "Understand OneLake",
+      "Understand Fabric workloads"
+    ],
+    "contentFile": "fabric_fundamentals.md"
+  },
+  {
+    "moduleId": "M002",
+    "title": "Azure Data Factory Fundamentals",
+    "difficulty": "Beginner",
+    "durationHours": 3,
+    "skills": ["Azure Data Factory"],
+    "prerequisites": [],
+    "learningObjectives": [
+      "Understand pipelines",
+      "Understand linked services",
+      "Build ETL workflows"
+    ],
+    "contentFile": "azure_data_factory.md"
+  },
+  {
+    "moduleId": "M003",
+    "title": "PySpark for Data Engineers",
+    "difficulty": "Intermediate",
+    "durationHours": 8,
+    "skills": ["PySpark"],
+    "prerequisites": [
+      "Azure Data Factory Fundamentals"
+    ],
+    "learningObjectives": [
+      "Transform data with PySpark",
+      "Perform aggregations",
+      "Optimize Spark jobs"
+    ],
+    "contentFile": "pyspark.md"
+  },
+  {
+    "moduleId": "M004",
+    "title": "Delta Lake Implementation",
+    "difficulty": "Intermediate",
+    "durationHours": 6,
+    "skills": ["Delta Lake"],
+    "prerequisites": [
+      "PySpark for Data Engineers"
+    ],
+    "learningObjectives": [
+      "Understand ACID transactions",
+      "Implement Delta tables",
+      "Use time travel and versioning"
+    ],
+    "contentFile": "delta_lake.md"
+  },
+  {
+    "moduleId": "M005",
+    "title": "Azure Databricks Engineering",
+    "difficulty": "Advanced",
+    "durationHours": 10,
+    "skills": ["Azure Databricks"],
+    "prerequisites": [
+      "PySpark for Data Engineers",
+      "Delta Lake Implementation"
+    ],
+    "learningObjectives": [
+      "Build enterprise data pipelines",
+      "Optimize Databricks workloads",
+      "Implement medallion architecture"
+    ],
+    "contentFile": "databricks.md"
+  },
+  {
+    "moduleId": "M006",
+    "title": "Synapse Analytics",
+    "difficulty": "Intermediate",
+    "durationHours": 6,
+    "skills": ["Synapse Analytics"],
+    "prerequisites": [
+      "Azure Data Factory Fundamentals"
+    ],
+    "learningObjectives": [
+      "Understand dedicated SQL pools",
+      "Use serverless SQL",
+      "Build analytics solutions"
+    ],
+    "contentFile": "synapse.md"
+  }
+]
