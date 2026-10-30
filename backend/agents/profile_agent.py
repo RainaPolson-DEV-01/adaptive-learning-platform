@@ -11,22 +11,34 @@ client = AzureOpenAI(
     azure_endpoint=os.getenv("AZURE_OPENAI_ENDPOINT")
 )
 
+
 def generate_profile(resume_text):
 
     prompt = f"""
-    Analyze this resume.
+Analyze this resume.
 
-    Extract:
-    1. Name
-    2. Skills
-    3. Career Goals
-    4. Experience Summary
+Extract:
 
-    Return ONLY valid JSON.
+1. name
+2. skills
+3. careerGoals
+4. experienceSummary
 
-    Resume:
-    {resume_text}
-    """
+Return ONLY valid JSON.
+
+Use EXACTLY this schema:
+
+{{
+    "name":"",
+    "skills":[],
+    "careerGoals":"",
+    "experienceSummary":""
+}}
+
+Resume:
+
+{resume_text}
+"""
 
     response = client.chat.completions.create(
         model=os.getenv("GPT_DEPLOYMENT"),
