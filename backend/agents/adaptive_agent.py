@@ -1,34 +1,80 @@
-"""Adjust a learning plan using learner progress and feedback."""
+import json
 
-from collections.abc import Callable
+from backend.services.openai_service import (
+    get_client,
+    get_model_name
+)
+
+from backend.services.prompt_service import (
+    load_prompt
+)
+
+client = get_client()
+model = get_model_name()
 
 
-class AdaptiveAgent:
-    """Recommend evidence-based updates to a learner's current plan."""
+def evaluate_learning_state(
+    profile,
+    progress,
+    learning_path
+):
 
-    def __init__(self, generate: Callable[[str], str]) -> None:
-        self._generate = generate
+    base_prompt = load_prompt(
+        "adaptive_prompt.txt"
+    )
 
-    def adapt_plan(
-        self,
-        current_plan: str,
-        learner_progress: str,
-        learner_feedback: str = "",
-    ) -> str:
-        """Revise a plan while preserving completed work and useful goals."""
-        if not current_plan.strip():
-            raise ValueError("current_plan must not be empty")
-        if not learner_progress.strip():
-            raise ValueError("learner_progress must not be empty")
+    prompt = f"""
+{base_prompt}
 
-        prompt = (
-            "Review the current learning plan in light of the learner's "
-            "progress and feedback. Keep completed work marked complete, "
-            "reinforce areas of difficulty, and adjust upcoming steps only "
-            "where the evidence supports a change. Briefly explain each "
-            "proposed adjustment.\n\n"
-            f"Current plan:\n{current_plan}\n\n"
-            f"Learner progress:\n{learner_progress}\n\n"
-            f"Learner feedback:\n{learner_feedback or 'Not provided'}"
-        )
-        return self._generate(prompt)
+Learner Profile:
+
+{json.dumps(profile, indent=2)}
+
+Learning Progress:
+
+{json.dumps(progress, indent=2)}
+
+Learning Path:
+
+{json.dumps(learning_path, indent=2)}
+"""
+
+    response = client.chat.completions.create(
+        model=model,
+        response_format={
+            "type": "json_object"
+        },
+        messages=[
+            {
+                "role": "user",
+                "content": prompt
+            }
+        ]
+    )
+
+    result = response.choices[0].message.content
+
+    print("RAW RESPONSE:")
+    print(result)
+
+    result = result.replace(
+        "```json",
+        ""
+    )
+
+    result = result.replace(
+        "```",
+        ""
+    )
+
+    result = result.strip()
+
+    try:
+        return json.loads(result)
+
+    except Exception as ex:
+
+        print("JSON Parse Failed")
+        print(result)
+
+        raise ex

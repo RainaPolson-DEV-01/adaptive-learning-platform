@@ -23,6 +23,15 @@ assessment_container = database.get_container_client(
 learning_path_container = database.get_container_client(
     "LearningPaths"
 )
+learning_path_container = database.get_container_client(
+    "LearningPaths"
+)
+learning_progress_container = database.get_container_client(
+    "LearningProgress"
+)
+evaluation_container = database.get_container_client(
+    "Evaluations"
+)
 
 
 def save_profile(profile):
@@ -91,3 +100,94 @@ def get_assessment(user_id):
     )
 
     return items[0] if items else None
+
+def get_learning_path(user_id):
+
+    query = """
+    SELECT *
+    FROM c
+    WHERE c.userId = @userId
+    """
+
+    items = list(
+        learning_path_container.query_items(
+            query=query,
+            parameters=[
+                {
+                    "name": "@userId",
+                    "value": user_id
+                }
+            ],
+            enable_cross_partition_query=True
+        )
+    )
+
+    return items[0] if items else None
+
+def save_learning_progress(progress):
+
+    learning_progress_container.upsert_item(
+        progress
+    )
+
+    return True
+def get_learning_progress(user_id):
+
+    query = """
+    SELECT *
+    FROM c
+    WHERE c.userId = @userId
+    """
+
+    items = list(
+        learning_progress_container.query_items(
+            query=query,
+            parameters=[
+                {
+                    "name": "@userId",
+                    "value": user_id
+                }
+            ],
+            enable_cross_partition_query=True
+        )
+    )
+
+    return items
+def update_learning_progress(
+    user_id,
+    module_id,
+    score,
+    percent_complete,
+    status
+):
+
+    progress_list = get_learning_progress(
+        user_id
+    )
+
+    for progress in progress_list:
+
+        if progress["moduleId"] == module_id:
+
+            progress["score"] = score
+
+            progress["percentComplete"] = (
+                percent_complete
+            )
+
+            progress["status"] = status
+
+            learning_progress_container.upsert_item(
+                progress
+            )
+
+            return progress
+
+    return None
+def save_evaluation(evaluation):
+
+    evaluation_container.upsert_item(
+        evaluation
+    )
+
+    return True

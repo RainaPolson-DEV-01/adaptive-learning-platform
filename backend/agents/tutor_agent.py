@@ -1,34 +1,67 @@
-"""Answer learner questions with context-aware tutoring."""
+from backend.services.openai_service import (
+    get_client,
+    get_model_name
+)
 
-from collections.abc import Callable
+from backend.services.prompt_service import (
+    load_prompt
+)
+
+client = get_client()
+model = get_model_name()
 
 
-class TutorAgent:
-    """Provide explanations adapted to the learner's level and context."""
+def answer_question(
+    learner_profile,
+    module,
+    question
+):
 
-    def __init__(self, generate: Callable[[str], str]) -> None:
-        self._generate = generate
+    base_prompt = load_prompt(
+        "tutor_prompt.txt"
+    )
 
-    def answer_question(
-        self,
-        question: str,
-        learner_profile: str,
-        learning_context: str = "",
-    ) -> str:
-        """Answer a question in a supportive, learner-appropriate way."""
-        if not question.strip():
-            raise ValueError("question must not be empty")
-        if not learner_profile.strip():
-            raise ValueError("learner_profile must not be empty")
+    prompt = f"""
+{base_prompt}
 
-        prompt = (
-            "Help the learner understand the answer to their question. "
-            "Adapt the explanation to their profile, explain key reasoning "
-            "clearly, and use a small example when useful. If the context "
-            "does not support a reliable answer, say what is missing rather "
-            "than guessing.\n\n"
-            f"Learner profile:\n{learner_profile}\n\n"
-            f"Learning context:\n{learning_context or 'Not provided'}\n\n"
-            f"Question:\n{question}"
-        )
-        return self._generate(prompt)
+Learner Background:
+
+{learner_profile["experienceSummary"]}
+
+Current Module:
+
+{module["title"]}
+
+Difficulty:
+
+{module["difficulty"]}
+
+Learning Objectives:
+
+{module["learningObjectives"]}
+
+Module Summary:
+
+{module["summary"]}
+
+Question:
+
+{question}
+"""
+
+    response = client.chat.completions.create(
+        model=model,
+        messages=[
+            {
+                "role": "user",
+                "content": prompt
+            }
+        ]
+    )
+
+    return (
+        response
+        .choices[0]
+        .message
+        .content
+    )

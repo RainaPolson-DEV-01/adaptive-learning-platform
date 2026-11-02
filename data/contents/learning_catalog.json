@@ -11,6 +11,7 @@
       "Understand OneLake",
       "Understand Fabric workloads"
     ],
+    "summary": "Microsoft Fabric is a unified analytics platform that combines data engineering, data integration, data warehousing, real-time analytics, data science, and Power BI into a single SaaS platform. OneLake acts as the centralized storage layer that enables all Fabric workloads to access and share the same data without duplication.",
     "contentFile": "fabric_fundamentals.md"
   },
   {
@@ -25,6 +26,7 @@
       "Understand linked services",
       "Build ETL workflows"
     ],
+    "summary": "Azure Data Factory is a cloud-based data integration service used to create, schedule, and orchestrate ETL and ELT workflows. It enables movement and transformation of data between multiple source and destination systems through pipelines, datasets, linked services, and triggers.",
     "contentFile": "azure_data_factory.md"
   },
   {
@@ -41,6 +43,7 @@
       "Perform aggregations",
       "Optimize Spark jobs"
     ],
+    "summary": "PySpark is the Python API for Apache Spark and is used for distributed processing of large datasets. Data engineers use PySpark for data transformation, aggregation, cleansing, feature engineering, and building scalable ETL workflows across clustered environments.",
     "contentFile": "pyspark.md"
   },
   {
@@ -57,6 +60,7 @@
       "Implement Delta tables",
       "Use time travel and versioning"
     ],
+    "summary": "Delta Lake is an open storage framework that provides ACID transactions, schema enforcement, schema evolution, auditing, and time-travel capabilities on top of data lakes. It improves reliability and data quality for analytical workloads.",
     "contentFile": "delta_lake.md"
   },
   {
@@ -74,6 +78,7 @@
       "Optimize Databricks workloads",
       "Implement medallion architecture"
     ],
+    "summary": "Azure Databricks is an analytics platform built on Apache Spark that enables data engineering, machine learning, and data analytics. It is commonly used to implement medallion architectures, build enterprise-grade ETL solutions, and optimize large-scale data processing workloads.",
     "contentFile": "databricks.md"
   },
   {
@@ -90,6 +95,7 @@
       "Use serverless SQL",
       "Build analytics solutions"
     ],
+    "summary": "Azure Synapse Analytics is an integrated analytics platform that combines data integration, enterprise data warehousing, and big data analytics. It supports both dedicated SQL pools and serverless SQL capabilities for scalable analytical solutions.",
     "contentFile": "synapse.md"
   }
 ]
