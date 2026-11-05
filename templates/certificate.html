@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="card shadow">
+
+<div class="card-body text-center">
+
+<h1>
+
+🏆 Certificate Status
+
+</h1>
+
+<h2>
+
+{{ certificate.completionStatus }}
+
+</h2>
+
+<h3>
+
+Overall Score:
+
+{{ certificate.overallScore }}
+
+</h3>
+
+</div>
+
+</div>
+
+{% endblock %}

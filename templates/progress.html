@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1>
+    📈 Learning Progress
+</h1>
+
+{% for item in progress %}
+
+<div class="card mb-4">
+
+    <div class="card-body">
+
+        <h4>
+            {{ item.moduleTitle }}
+        </h4>
+
+        <p>
+            Status:
+            <b>
+                {{ item.status }}
+            </b>
+        </p>
+
+        <p>
+            Score:
+            <b>
+                {{ item.score }}%
+            </b>
+        </p>
+
+        <div class="progress">
+
+            <div
+                class="progress-bar"
+                role="progressbar"
+                style="width: {{ item.percentComplete }}%;">
+
+                {{ item.percentComplete }}%
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endfor %}
+
+{% endblock %}

@@ -1,4 +1,5 @@
 import os
+
 from dotenv import load_dotenv
 from azure.cosmos import CosmosClient
 
@@ -13,6 +14,10 @@ database = client.get_database_client(
     "AdaptiveLearning"
 )
 
+# =========================
+# Containers
+# =========================
+
 profile_container = database.get_container_client(
     "LearnerProfiles"
 )
@@ -20,19 +25,26 @@ profile_container = database.get_container_client(
 assessment_container = database.get_container_client(
     "Assessments"
 )
+
 learning_path_container = database.get_container_client(
     "LearningPaths"
 )
-learning_path_container = database.get_container_client(
-    "LearningPaths"
-)
+
 learning_progress_container = database.get_container_client(
     "LearningProgress"
 )
+
 evaluation_container = database.get_container_client(
     "Evaluations"
 )
 
+certificate_container = database.get_container_client(
+    "Certificates"
+)
+
+# =========================
+# Profile Functions
+# =========================
 
 def save_profile(profile):
 
@@ -65,6 +77,10 @@ def get_profile(user_id):
     return items[0] if items else None
 
 
+# =========================
+# Assessment Functions
+# =========================
+
 def save_assessment(assessment):
 
     assessment_container.upsert_item(
@@ -73,11 +89,7 @@ def save_assessment(assessment):
 
     return True
 
-def save_learning_path(path):
 
-    learning_path_container.upsert_item(path)
-
-    return True
 def get_assessment(user_id):
 
     query = """
@@ -100,6 +112,20 @@ def get_assessment(user_id):
     )
 
     return items[0] if items else None
+
+
+# =========================
+# Learning Path Functions
+# =========================
+
+def save_learning_path(path):
+
+    learning_path_container.upsert_item(
+        path
+    )
+
+    return True
+
 
 def get_learning_path(user_id):
 
@@ -124,6 +150,11 @@ def get_learning_path(user_id):
 
     return items[0] if items else None
 
+
+# =========================
+# Learning Progress Functions
+# =========================
+
 def save_learning_progress(progress):
 
     learning_progress_container.upsert_item(
@@ -131,6 +162,8 @@ def save_learning_progress(progress):
     )
 
     return True
+
+
 def get_learning_progress(user_id):
 
     query = """
@@ -153,6 +186,8 @@ def get_learning_progress(user_id):
     )
 
     return items
+
+
 def update_learning_progress(
     user_id,
     module_id,
@@ -184,6 +219,12 @@ def update_learning_progress(
             return progress
 
     return None
+
+
+# =========================
+# Evaluation Functions
+# =========================
+
 def save_evaluation(evaluation):
 
     evaluation_container.upsert_item(
@@ -191,3 +232,64 @@ def save_evaluation(evaluation):
     )
 
     return True
+
+
+def get_evaluation(user_id):
+
+    query = """
+    SELECT *
+    FROM c
+    WHERE c.userId = @userId
+    """
+
+    items = list(
+        evaluation_container.query_items(
+            query=query,
+            parameters=[
+                {
+                    "name": "@userId",
+                    "value": user_id
+                }
+            ],
+            enable_cross_partition_query=True
+        )
+    )
+
+    return items[0] if items else None
+
+
+# =========================
+# Certificate Functions
+# =========================
+
+def save_certificate(certificate):
+
+    certificate_container.upsert_item(
+        certificate
+    )
+
+    return True
+
+
+def get_certificate(user_id):
+
+    query = """
+    SELECT *
+    FROM c
+    WHERE c.userId = @userId
+    """
+
+    items = list(
+        certificate_container.query_items(
+            query=query,
+            parameters=[
+                {
+                    "name": "@userId",
+                    "value": user_id
+                }
+            ],
+            enable_cross_partition_query=True
+        )
+    )
+
+    return items[0] if items else None

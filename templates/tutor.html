@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1>
+    🤖 AI Tutor
+</h1>
+
+<div class="card">
+
+    <div class="card-body">
+
+        <form method="POST">
+
+            <label class="form-label">
+
+                Ask a Question
+
+            </label>
+
+            <textarea
+                class="form-control"
+                rows="4"
+                name="question"
+                placeholder="Example: What is OneLake?">
+            </textarea>
+
+            <button
+                type="submit"
+                class="btn btn-primary mt-3">
+
+                Ask Tutor
+
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+{% if answer %}
+
+<div class="card mt-4">
+
+    <div class="card-body">
+
+        <h4>
+            Tutor Response
+        </h4>
+
+        <hr>
+
+        <p>
+            {{ answer }}
+        </p>
+
+    </div>
+
+</div>
+
+{% endif %}
+
+{% endblock %}

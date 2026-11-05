@@ -1,0 +1,58 @@
+body {
+
+    background-color: #f4f7fc;
+
+    font-family:
+        "Segoe UI",
+        sans-serif;
+}
+
+.nav-link {
+
+    padding: 12px;
+
+    border-radius: 8px;
+}
+
+.nav-link:hover {
+
+    background-color:
+        rgba(
+            255,
+            255,
+            255,
+            0.15
+        );
+}
+
+.card {
+
+    border-radius: 15px;
+
+    box-shadow:
+        0 4px 12px
+        rgba(
+            0,
+            0,
+            0,
+            0.1
+        );
+}
+.badge {
+
+    padding: 8px 12px;
+
+    border-radius: 20px;
+
+    margin-right: 5px;
+}
+
+.card {
+
+    transition: 0.3s ease;
+}
+
+.card:hover {
+
+    transform: translateY(-3px);
+}

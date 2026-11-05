@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1>
+    📚 Personalized Learning Path
+</h1>
+
+<div class="card mb-4">
+
+    <div class="card-body">
+
+        <h3>Learning Goal</h3>
+
+        <p>
+            {{ path.goal }}
+        </p>
+
+        <hr>
+
+        <h5>Estimated Duration</h5>
+
+        <span class="badge bg-success">
+
+            {{ path.estimatedDuration }}
+
+        </span>
+
+    </div>
+
+</div>
+
+<h3>
+    Recommended Modules
+</h3>
+
+{% for module in path.modules %}
+
+<div class="card mb-3">
+
+    <div class="card-body">
+
+        <h4>
+
+            {{ module.title }}
+
+        </h4>
+
+        <p>
+
+            Module ID:
+            {{ module.moduleId }}
+
+        </p>
+
+        <span class="badge bg-primary">
+
+            {{ module.difficulty }}
+
+        </span>
+
+        <span class="badge bg-info">
+
+            {{ module.durationHours }}
+            Hours
+
+        </span>
+
+    </div>
+
+</div>
+
+{% endfor %}
+
+{% endblock %}

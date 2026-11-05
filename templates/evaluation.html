@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="card shadow">
+
+<div class="card-body">
+
+<h3>
+
+Readiness:
+{{ evaluation.readiness }}
+
+</h3>
+
+<h1>
+
+{{ evaluation.overallScore }}
+
+</h1>
+
+<p>
+
+{{ evaluation.recommendation }}
+
+</p>
+
+</div>
+
+</div>
+
+{% endblock %}
