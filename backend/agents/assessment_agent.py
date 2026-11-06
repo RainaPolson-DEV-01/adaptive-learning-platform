@@ -15,11 +15,6 @@ model = get_model_name()
 
 def generate_assessment(profile):
 
-    skills = profile.get(
-        "skills",
-        profile.get("Skills", [])
-    )
-
     base_prompt = load_prompt(
         "assessment_prompt.txt"
     )
@@ -27,13 +22,39 @@ def generate_assessment(profile):
     prompt = f"""
 {base_prompt}
 
-Learner Skills:
+Learner Profile:
 
-{skills}
+{json.dumps(profile, indent=2)}
+
+Generate:
+
+1. 10 multiple-choice questions
+2. Four options per question
+3. One correct answer
+4. Associate each question with a skill area
+5. Base questions on learner skills from the profile
+
+Return ONLY valid JSON.
+
+Schema:
+
+{{
+    "assessment": [
+        {{
+    "question": "",
+    "options": [],
+    "answer": "",
+    "skill": "",
+    "difficulty": ""
+}}
+    ]
+}}
 """
-
     response = client.chat.completions.create(
         model=model,
+        response_format={
+            "type": "json_object"
+        },
         messages=[
             {
                 "role": "user",
@@ -42,10 +63,13 @@ Learner Skills:
         ]
     )
 
-    result = response.choices[0].message.content
+    result = (
+        response
+        .choices[0]
+        .message
+        .content
+    )
 
-    result = result.replace("```json", "")
-    result = result.replace("```", "")
-    result = result.strip()
-
-    return json.loads(result)
+    return json.loads(
+        result
+    )

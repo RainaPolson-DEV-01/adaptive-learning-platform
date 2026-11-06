@@ -6,65 +6,57 @@
     📚 Personalized Learning Path
 </h1>
 
-<div class="card mb-4">
+<div class="card mb-4 shadow">
+    <div class="card-body">
+
+        <h3>
+            Learning Plan Based on Assessment
+        </h3>
+
+        <p>
+            This roadmap has been generated using the
+            identified skill gaps from your assessment.
+        </p>
+
+    </div>
+</div>
+
+{% for module in learning_path.learningPath %}
+
+<div class="card mb-3 shadow">
 
     <div class="card-body">
 
-        <h3>Learning Goal</h3>
-
-        <p>
-            {{ path.goal }}
-        </p>
+        <h4 class="text-primary">
+            {{ module.moduleTitle }}
+        </h4>
 
         <hr>
 
-        <h5>Estimated Duration</h5>
-
-        <span class="badge bg-success">
-
-            {{ path.estimatedDuration }}
-
-        </span>
-
-    </div>
-
-</div>
-
-<h3>
-    Recommended Modules
-</h3>
-
-{% for module in path.modules %}
-
-<div class="card mb-3">
-
-    <div class="card-body">
-
-        <h4>
-
-            {{ module.title }}
-
-        </h4>
-
         <p>
-
-            Module ID:
-            {{ module.moduleId }}
-
+            <strong>Skill:</strong>
+            {{ module.skill }}
         </p>
 
-        <span class="badge bg-primary">
+        <p>
+            <strong>Duration:</strong>
+            {{ module.duration }}
+        </p>
 
-            {{ module.difficulty }}
+        <p>
+            <strong>Objective:</strong>
+            {{ module.objective }}
+        </p>
 
-        </span>
+        <p>
+            <strong>Hands-on Exercise:</strong>
+            {{ module.exercise }}
+        </p>
 
-        <span class="badge bg-info">
-
-            {{ module.durationHours }}
-            Hours
-
-        </span>
+        <p>
+            <strong>Expected Outcome:</strong>
+            {{ module.outcome }}
+        </p>
 
     </div>
 

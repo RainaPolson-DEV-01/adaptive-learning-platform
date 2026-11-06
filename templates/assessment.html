@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1>
+    📝 Assessment
+</h1>
+
+<form
+    method="POST"
+    action="/submit-assessment">
+
+    {% for question in assessment.assessment %}
+
+    {% set question_index = loop.index %}
+
+    <div class="card mb-4">
+
+        <div class="card-body">
+
+            <h5>
+
+                {{ question_index }}.
+                {{ question.question }}
+
+            </h5>
+
+            {% for option in question.options %}
+
+            <div class="form-check">
+
+                <input
+                    class="form-check-input"
+                    type="radio"
+                    name="q{{ question_index }}"
+                    value="{{ option }}"
+                    required>
+
+                <label
+                    class="form-check-label">
+
+                    {{ option }}
+
+                </label>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+    {% endfor %}
+
+    <button
+        type="submit"
+        class="btn btn-success">
+
+        Submit Assessment
+
+    </button>
+
+</form>
+
+{% endblock %}

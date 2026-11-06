@@ -2,6 +2,9 @@ import os
 
 from dotenv import load_dotenv
 from azure.cosmos import CosmosClient
+from azure.cosmos.exceptions import (
+    CosmosResourceExistsError
+)
 
 load_dotenv()
 
@@ -14,9 +17,9 @@ database = client.get_database_client(
     "AdaptiveLearning"
 )
 
-# =========================
+# ==========================================
 # Containers
-# =========================
+# ==========================================
 
 profile_container = database.get_container_client(
     "LearnerProfiles"
@@ -41,16 +44,34 @@ evaluation_container = database.get_container_client(
 certificate_container = database.get_container_client(
     "Certificates"
 )
+assessment_result_container = (
+    database.get_container_client(
+        "AssessmentResults"
+    )
+)
 
-# =========================
+# ==========================================
 # Profile Functions
-# =========================
+# ==========================================
 
 def save_profile(profile):
 
-    profile_container.upsert_item(profile)
+    try:
 
-    return True
+        profile_container.create_item(
+            profile
+        )
+
+        return True
+
+    except CosmosResourceExistsError:
+
+        print(
+            f"Profile already exists: "
+            f"{profile['id']}"
+        )
+
+        return False
 
 
 def get_profile(user_id):
@@ -77,17 +98,28 @@ def get_profile(user_id):
     return items[0] if items else None
 
 
-# =========================
+# ==========================================
 # Assessment Functions
-# =========================
+# ==========================================
 
 def save_assessment(assessment):
 
-    assessment_container.upsert_item(
-        assessment
-    )
+    try:
 
-    return True
+        assessment_container.create_item(
+            assessment
+        )
+
+        return True
+
+    except CosmosResourceExistsError:
+
+        print(
+            f"Assessment already exists: "
+            f"{assessment['id']}"
+        )
+
+        return False
 
 
 def get_assessment(user_id):
@@ -114,18 +146,28 @@ def get_assessment(user_id):
     return items[0] if items else None
 
 
-# =========================
+# ==========================================
 # Learning Path Functions
-# =========================
+# ==========================================
 
 def save_learning_path(path):
 
-    learning_path_container.upsert_item(
-        path
-    )
+    try:
 
-    return True
+        learning_path_container.create_item(
+            path
+        )
 
+        return True
+
+    except CosmosResourceExistsError:
+
+        print(
+            f"Learning path already exists: "
+            f"{path['id']}"
+        )
+
+        return False
 
 def get_learning_path(user_id):
 
@@ -151,14 +193,14 @@ def get_learning_path(user_id):
     return items[0] if items else None
 
 
-# =========================
+# ==========================================
 # Learning Progress Functions
-# =========================
+# ==========================================
 
-def save_learning_progress(progress):
+def save_learning_path(path):
 
-    learning_progress_container.upsert_item(
-        progress
+    learning_path_container.upsert_item(
+        path
     )
 
     return True
@@ -212,6 +254,7 @@ def update_learning_progress(
 
             progress["status"] = status
 
+            # Progress is expected to change
             learning_progress_container.upsert_item(
                 progress
             )
@@ -221,17 +264,28 @@ def update_learning_progress(
     return None
 
 
-# =========================
+# ==========================================
 # Evaluation Functions
-# =========================
+# ==========================================
 
 def save_evaluation(evaluation):
 
-    evaluation_container.upsert_item(
-        evaluation
-    )
+    try:
 
-    return True
+        evaluation_container.create_item(
+            evaluation
+        )
+
+        return True
+
+    except CosmosResourceExistsError:
+
+        print(
+            f"Evaluation already exists: "
+            f"{evaluation['id']}"
+        )
+
+        return False
 
 
 def get_evaluation(user_id):
@@ -258,17 +312,28 @@ def get_evaluation(user_id):
     return items[0] if items else None
 
 
-# =========================
+# ==========================================
 # Certificate Functions
-# =========================
+# ==========================================
 
 def save_certificate(certificate):
 
-    certificate_container.upsert_item(
-        certificate
-    )
+    try:
 
-    return True
+        certificate_container.create_item(
+            certificate
+        )
+
+        return True
+
+    except CosmosResourceExistsError:
+
+        print(
+            f"Certificate already exists: "
+            f"{certificate['id']}"
+        )
+
+        return False
 
 
 def get_certificate(user_id):
@@ -281,6 +346,67 @@ def get_certificate(user_id):
 
     items = list(
         certificate_container.query_items(
+            query=query,
+            parameters=[
+                {
+                    "name": "@userId",
+                    "value": user_id
+                }
+            ],
+            enable_cross_partition_query=True
+        )
+    )
+
+    return items[0] if items else None
+
+# ==========================================
+# assessment save Functions
+# ==========================================
+
+
+def save_assessment_result(
+    result
+):
+
+    assessment_result_container.create_item(
+        result
+    )
+
+    return True
+# ==========================================
+# Assessment Result Functions
+# ==========================================
+
+assessment_result_container = (
+    database.get_container_client(
+        "AssessmentResults"
+    )
+)
+
+
+def save_assessment_result(
+    result
+):
+
+    assessment_result_container.create_item(
+        result
+    )
+
+    return True
+
+
+def get_assessment_result(
+    user_id
+):
+
+    query = """
+    SELECT *
+    FROM c
+    WHERE c.userId = @userId
+    """
+
+    items = list(
+        assessment_result_container.query_items(
             query=query,
             parameters=[
                 {

@@ -2,57 +2,287 @@
 
 {% block content %}
 
-<div class="card">
+<div class="container-fluid">
 
-    <div class="card-body">
+    <!-- Profile Card -->
 
-        <h2>
-            👤 Learner Profile
-        </h2>
+    <div class="row">
 
-        <hr>
+        <div class="col-12">
 
-        <h3>
-            {{ profile.name }}
-        </h3>
+            <div class="card shadow-sm">
 
-        <br>
+                <div class="card-body">
 
-        <h5>
-            Career Goals
-        </h5>
+                    <h2 class="mb-3">
+                        👤 Learner Profile
+                    </h2>
 
-        <p>
-            {{ profile.careerGoals }}
-        </p>
+                    <hr>
 
-        <br>
+                    <div class="row">
 
-        <h5>
-            Experience Summary
-        </h5>
+                        <div class="col-lg-6 col-md-12">
 
-        <p>
-            {{ profile.experienceSummary }}
-        </p>
+                            <h4 class="text-primary">
 
-        <br>
+                                {{ profile.name }}
 
-        <h5>
-            Skills
-        </h5>
+                            </h4>
 
-        <div>
+                        </div>
 
-            {% for skill in profile.skills %}
+                    </div>
 
-            <span class="badge bg-primary">
+                    <!-- Profile Completion -->
 
-                {{ skill }}
+                    <div class="row mt-4">
 
-            </span>
+                        <div class="col-12">
 
-            {% endfor %}
+                            <h5>
+                                Profile Completion
+                            </h5>
+
+                            <div class="progress mb-2">
+
+                                <div
+                                    class="progress-bar bg-success"
+                                    role="progressbar"
+                                    style="width: 100%;">
+
+                                    100%
+
+                                </div>
+
+                            </div>
+
+                            <small class="text-muted">
+
+                                Resume uploaded and profile generated successfully.
+
+                            </small>
+
+                        </div>
+
+                    </div>
+
+                    <hr>
+
+                    <!-- Career Goals -->
+
+                    <div class="row mt-3">
+
+                        <div class="col-md-12">
+
+                            <h5>
+                                Career Goals
+                            </h5>
+
+                            <p>
+                                {{ profile.careerGoals }}
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                    <!-- Experience -->
+
+                    <div class="row mt-3">
+
+                        <div class="col-md-12">
+
+                            <h5>
+                                Experience Summary
+                            </h5>
+
+                            <p>
+                                {{ profile.experienceSummary }}
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                    <!-- Skills -->
+
+                    <div class="row mt-3">
+
+                        <div class="col-md-12">
+
+                            <h5>
+                                Skills Identified
+                            </h5>
+
+                            <div class="d-flex flex-wrap gap-2">
+
+                                {% for skill in profile.skills %}
+
+                                <span
+                                    class="badge bg-primary p-2">
+
+                                    {{ skill }}
+
+                                </span>
+
+                                {% endfor %}
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Assessment Ready Card -->
+
+    <div class="row mt-4">
+
+        <div class="col-12">
+
+            <div
+                class="card assessment-card border-success shadow-sm">
+
+                <div class="card-body">
+
+                    <div class="row align-items-center">
+
+                        <div class="col-lg-8 col-md-8 col-sm-12">
+
+                            <h4 class="text-success">
+
+                                ✅ Assessment Ready
+
+                            </h4>
+
+                            <p class="mb-2">
+
+                                Your resume has been analyzed successfully.
+
+                            </p>
+
+                            <p class="mb-0">
+
+                                Skills, experience, and career goals
+                                have been extracted and a personalized
+                                assessment has been generated based on
+                                your learner profile.
+
+                            </p>
+
+                        </div>
+
+                        <div
+                            class="col-lg-4 col-md-4 col-sm-12
+                                   mt-3 mt-md-0 text-md-end">
+
+                            <a
+                                href="/assessment"
+                                class="btn btn-success btn-lg w-100">
+
+                                Take Assessment →
+
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Journey Progress -->
+
+    <div class="row mt-4">
+
+        <div class="col-12">
+
+            <div class="card shadow-sm">
+
+                <div class="card-body">
+
+                    <h5>
+                        Learning Journey Progress
+                    </h5>
+
+                    <div class="progress mt-3">
+
+                        <div
+                            class="progress-bar bg-info"
+                            style="width: 30%;">
+
+                            30%
+
+                        </div>
+
+                    </div>
+
+                    <div class="mt-3">
+
+                        <ul class="list-group">
+
+                            <li class="list-group-item">
+
+                                ✅ Resume Uploaded
+
+                            </li>
+
+                            <li class="list-group-item">
+
+                                ✅ Profile Generated
+
+                            </li>
+
+                            <li class="list-group-item">
+
+                                ✅ Assessment Ready
+
+                            </li>
+
+                            <li class="list-group-item text-muted">
+
+                                ⬜ Assessment Completion Pending
+
+                            </li>
+
+                            <li class="list-group-item text-muted">
+
+                                ⬜ Learning Path Generation Pending
+
+                            </li>
+
+                            <li class="list-group-item text-muted">
+
+                                ⬜ Evaluation Pending
+
+                            </li>
+
+                            <li class="list-group-item text-muted">
+
+                                ⬜ Certificate Pending
+
+                            </li>
+
+                        </ul>
+
+                    </div>
+
+                </div>
+
+            </div>
 
         </div>
 

@@ -5,42 +5,75 @@ from backend.services.openai_service import (
     get_model_name
 )
 
-from backend.services.prompt_service import (
-    load_prompt
-)
-
 client = get_client()
 model = get_model_name()
 
 
 def generate_learning_path(
-    profile,
-    assessment,
-    catalog
+        profile,
+        assessment_result
 ):
 
-    base_prompt = load_prompt(
-        "planner_prompt.txt"
+    skill_gaps = assessment_result.get(
+        "skillGaps",
+        []
+    )
+
+    learner_level = assessment_result.get(
+        "learnerLevel",
+        "Beginner"
     )
 
     prompt = f"""
-{base_prompt}
+You are an Adaptive Learning Path Agent.
+
+Create a personalized learning roadmap.
 
 Learner Profile:
 
 {json.dumps(profile, indent=2)}
 
-Assessment:
+Assessment Information:
 
-{json.dumps(assessment, indent=2)}
+Level: {learner_level}
 
-Available Learning Catalog:
+Identified Skill Gaps:
 
-{json.dumps(catalog, indent=2)}
+{json.dumps(skill_gaps, indent=2)}
+
+IMPORTANT RULES:
+
+1. Create modules ONLY for the identified skill gaps.
+2. Do NOT create modules for skills the learner already knows.
+3. Arrange modules from beginner to advanced.
+4. Each module must directly address one skill gap.
+5. Include learning objectives.
+6. Include estimated duration.
+7. Include hands-on exercises.
+8. Include expected outcome.
+9. Return ONLY valid JSON.
+
+Schema:
+
+{{
+    "learningPath": [
+        {{
+            "moduleTitle": "",
+            "skill": "",
+            "duration": "",
+            "objective": "",
+            "exercise": "",
+            "outcome": ""
+        }}
+    ]
+}}
 """
 
     response = client.chat.completions.create(
         model=model,
+        response_format={
+            "type": "json_object"
+        },
         messages=[
             {
                 "role": "user",
@@ -49,10 +82,13 @@ Available Learning Catalog:
         ]
     )
 
-    result = response.choices[0].message.content
+    content = (
+        response
+        .choices[0]
+        .message
+        .content
+    )
 
-    result = result.replace("```json", "")
-    result = result.replace("```", "")
-    result = result.strip()
-
-    return json.loads(result)
+    return json.loads(
+        content
+    )
